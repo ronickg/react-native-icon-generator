@@ -90,7 +90,7 @@ console.log(`Found ${svgFiles.length} SVG icons to process.`);
       const fixedSvgPath = path.join(tempSvgsDir, path.basename(svgPath));
       const androidOutputPath = path.join(
         androidOutputDir,
-        "ic_" + iconName + ".xml"
+        "ic_" + iconName.replace(/-/g, "_") + ".xml"
       );
 
       // Check if fixed SVG exists
