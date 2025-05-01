@@ -11,7 +11,8 @@
   "files": [
     "lib",
     "src",
-    "README.md"
+    "README.md",
+    "app.plugin.js"
   ],
   "scripts": {
     "start": "tsc && node lib/index.js",
@@ -37,8 +38,18 @@
     "source": "src",
     "output": "lib",
     "targets": [
-      "commonjs",
-      "module",
+      [
+        "commonjs",
+        {
+          "esm": false
+        }
+      ],
+      [
+        "module",
+        {
+          "esm": true
+        }
+      ],
       "typescript"
     ]
   },

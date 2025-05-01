@@ -1,24 +1,24 @@
 const {
+  createRunOncePlugin,
   withDangerousMod,
   withXcodeProject,
   IOSConfig,
+  withPlugins,
 } = require("@expo/config-plugins");
 const fs = require("fs");
 const path = require("path");
+const pkg = require("../../package.json");
 
 /**
- * This config plugin handles resource files for both Android and iOS.
+ * Handle Android icon resources
  * @param {Object} config - Expo config
- * @param {Object} props - Configuration props
- * @param {string} [props.android] - Directory path for Android drawable resources
- * @param {string} [props.ios] - Path to iOS asset catalog
+ * @param {string} androidPath - Directory path for Android drawable resources
  */
-function withIcons(config, { android, ios } = {}) {
-  // Handle Android resources
-  config = withDangerousMod(config, [
+const withAndroidIcons = (config, androidPath) => {
+  return withDangerousMod(config, [
     "android",
     (config) => {
-      if (!android) {
+      if (!androidPath) {
         return config; // Skip if no Android resources provided
       }
 
@@ -36,7 +36,7 @@ function withIcons(config, { android, ios } = {}) {
       // Handle directory path
       const sourceDirPath = path.resolve(
         config.modRequest.projectRoot,
-        android
+        androidPath
       );
 
       if (!fs.existsSync(sourceDirPath)) {
@@ -68,15 +68,21 @@ function withIcons(config, { android, ios } = {}) {
       return config;
     },
   ]);
+};
 
-  // Handle iOS resources - simplified approach like withXcodeBundleResource.js
-  config = withXcodeProject(config, async (config) => {
-    if (!ios) {
+/**
+ * Handle iOS icon resources
+ * @param {Object} config - Expo config
+ * @param {string} iosPath - Path to iOS asset catalog
+ */
+const withIosIcons = (config, iosPath) => {
+  return withXcodeProject(config, async (config) => {
+    if (!iosPath) {
       return config; // Skip if no iOS resources provided
     }
 
     // Simple implementation - just add the asset catalog to the project
-    const thisFilePath = path.join("../", ios);
+    const thisFilePath = path.join("../", iosPath);
     if (!config.modResults.hasFile(thisFilePath)) {
       console.log(`Adding ${thisFilePath} to Xcode project`);
       IOSConfig.XcodeUtils.addResourceFileToGroup({
@@ -89,8 +95,22 @@ function withIcons(config, { android, ios } = {}) {
 
     return config;
   });
+};
 
+/**
+ * This config plugin handles resource files for both Android and iOS.
+ * @param {Object} config - Expo config
+ * @param {Object} props - Configuration props
+ * @param {string} [props.android] - Directory path for Android drawable resources
+ * @param {string} [props.ios] - Path to iOS asset catalog
+ */
+const withIcons = (config, { android, ios } = {}) => {
+  // Apply modifications to the config here
+  config = withPlugins(config, [
+    [withAndroidIcons, android],
+    [withIosIcons, ios],
+  ]);
   return config;
-}
+};
 
-module.exports = withIcons;
+module.exports = createRunOncePlugin(withIcons, pkg.name, pkg.version);
