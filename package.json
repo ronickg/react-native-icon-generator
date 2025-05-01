@@ -1,24 +1,46 @@
 {
   "name": "react-native-icon-generator-cli",
-  "module": "index.ts",
+  "version": "0.0.1",
+  "main": "./lib/commonjs/index.js",
+  "module": "./lib/module/index.js",
+  "source": "src/index",
   "type": "module",
   "bin": {
-    "icon-gen": "dist/index.js"
+    "generate-icons": "./lib/index.js"
+  },
+  "files": [
+    "lib",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "tsc && node lib/index.js",
+    "build": "yarn tsc",
+    "typecheck": "tsc --noEmit",
+    "prepare": "bob build"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "react-native-builder-bob": "^0.39.1",
+    "@expo/config-plugins": "^10.0.2",
+    "@types/bun": "latest",
+    "@types/node": "^20.8.0",
+    "typescript": "~5.5.4"
+  },
+  "dependencies": {
+    "oslllo-svg-fixer": "^5.0.0",
+    "svg2vectordrawable": "^2.9.1"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
   },
-  "dependencies": {
-    "@types/minimist": "^1.2.5",
-    "commander": "^13.1.0",
-    "fs-extra": "^11.3.0",
-    "minimist": "^1.2.8",
-    "oslllo-svg-fixer": "^5.0.0",
-    "svg2vectordrawable": "^2.9.1",
-    "svgo": "^3.3.2",
-    "svgson": "^5.3.1"
-  }
+  "react-native-builder-bob": {
+    "source": "src",
+    "output": "lib",
+    "targets": [
+      "commonjs",
+      "module",
+      "typescript"
+    ]
+  },
+  "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }
