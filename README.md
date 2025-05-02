@@ -1,53 +1,49 @@
-# react-native-icon-generator-cli
+# react-native-icon-converter-cli
 
-A tool to generate SVG-based icons in formats compatible with Android and iOS apps.
+A command-line tool to convert SVG icons into formats compatible with both Android and iOS from a single source. Also has an expo plugin to copy the files into the correct native folders.
 
 ## Installation
 
-To install dependencies:
-
 ```bash
-bun install
+npm install react-native-icon-converter-cli --save-dev
 ```
 
-## Usage
+## Expo Integration
 
-To run:
+Add the plugin to your Expo config in `app.json` or `app.config.js`:
 
-```bash
-bun run index.ts
+```json
+{
+  "expo": {
+    "plugins": ["react-native-icon-converter-cli"]
+  }
+}
 ```
 
-This will:
+With custom paths (optional):
 
-1. Fix any SVG rendering issues using oslllo-svg-fixer
-2. Convert the SVG to Android Vector Drawable format
-3. Convert the SVG to iOS SF Symbols compatible format
-
-## Output Files
-
-- `android/locate.xml`: Android Vector Drawable file
-- `ios/locate.symbolset/`: iOS SF Symbols compatible directory
-  - `Contents.json`: Symbol set metadata
-  - `locate.svg`: SF Symbols compatible SVG
-
-## How to use the iOS Symbol in Xcode
-
-1. Add the generated `.symbolset` folder to your Xcode project's asset catalog.
-2. Use the custom symbol in your Swift/Objective-C code:
-
-```swift
-// Swift
-let image = UIImage(named: "locate")
-
-// Or using SF Symbols API (iOS 13+)
-let config = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular)
-let image = UIImage(named: "locate")?.withConfiguration(config)
+```json
+{
+  "expo": {
+    "plugins": [
+      [
+        "react-native-icon-converter-cli",
+        {
+          "ios": "./assets/ios-icons/Icons.xcassets",
+          "android": "./assets/android-icons"
+        }
+      ]
+    ]
+  }
+}
 ```
 
-## Notes
+## Example use case with native menu
 
-- iOS symbols are formatted to be compatible with SF Symbols.
-- For iOS, you can import the `.symbolset` directory into the SF Symbols app for further customization.
+### iOS Icons
 
-This project was created using `bun init` in bun v1.1.24. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
+![iOS Icons](./ios-image.png)
+
+### Android Icons
+
+![Android Icons](./android-image.png)

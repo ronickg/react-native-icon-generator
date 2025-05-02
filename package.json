@@ -1,12 +1,12 @@
 {
-  "name": "react-native-icon-generator-cli",
+  "name": "react-native-icon-converter-cli",
+  "description": "A command-line tool to convert SVG icons into formats compatible with both Android and iOS from a single source.",
   "version": "0.0.1",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
   "source": "src/index",
-  "type": "module",
   "bin": {
-    "generate-icons": "./lib/index.js"
+    "generate-icons": "./lib/commonjs/index.js"
   },
   "files": [
     "lib",
@@ -20,9 +20,28 @@
     "typecheck": "tsc --noEmit",
     "prepare": "bob build"
   },
+  "keywords": [
+    "react-native",
+    "ios",
+    "android"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ronickg/react-native-icon-converter-cli.git"
+  },
+  "author": "Ronald Goedeke <ronald.goedeke@outlook.com> (https://github.com/ronickg)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ronickg/react-native-icon-converter-cli/issues"
+  },
+  "homepage": "https://github.com/ronickg/react-native-icon-converter-cli#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "devDependencies": {
     "react-native-builder-bob": "^0.39.1",
     "@expo/config-plugins": "^10.0.2",
+    "release-it": "^17.10.0",
     "@types/bun": "latest",
     "@types/node": "^20.8.0",
     "typescript": "~5.5.4"
@@ -33,6 +52,25 @@
   },
   "peerDependencies": {
     "typescript": "^5.0.0"
+  },
+  "release-it": {
+    "git": {
+      "commitMessage": "chore: release ${version}",
+      "tagName": "v${version}"
+    },
+    "npm": {
+      "publish": true
+    },
+    "github": {
+      "release": true
+    },
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": {
+          "name": "angular"
+        }
+      }
+    }
   },
   "react-native-builder-bob": {
     "source": "src",

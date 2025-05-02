@@ -1,20 +1,39 @@
-const {
+import type { ConfigPlugin } from "@expo/config-plugins";
+import {
   createRunOncePlugin,
   withDangerousMod,
   withXcodeProject,
   IOSConfig,
   withPlugins,
-} = require("@expo/config-plugins");
-const fs = require("fs");
-const path = require("path");
+} from "@expo/config-plugins";
+import fs from "fs";
+import path from "path";
+
 const pkg = require("../../package.json");
+
+/**
+ * Configuration properties for the plugin
+ */
+export interface IconsConfigProps {
+  /**
+   * Directory path for Android drawable resources
+   */
+  android?: string;
+  /**
+   * Path to iOS asset catalog
+   */
+  ios?: string;
+}
 
 /**
  * Handle Android icon resources
  * @param {Object} config - Expo config
  * @param {string} androidPath - Directory path for Android drawable resources
  */
-const withAndroidIcons = (config, androidPath) => {
+const withAndroidIcons: ConfigPlugin<string | undefined> = (
+  config,
+  androidPath
+) => {
   return withDangerousMod(config, [
     "android",
     (config) => {
@@ -75,7 +94,7 @@ const withAndroidIcons = (config, androidPath) => {
  * @param {Object} config - Expo config
  * @param {string} iosPath - Path to iOS asset catalog
  */
-const withIosIcons = (config, iosPath) => {
+const withIosIcons: ConfigPlugin<string | undefined> = (config, iosPath) => {
   return withXcodeProject(config, async (config) => {
     if (!iosPath) {
       return config; // Skip if no iOS resources provided
@@ -84,10 +103,9 @@ const withIosIcons = (config, iosPath) => {
     // Simple implementation - just add the asset catalog to the project
     const thisFilePath = path.join("../", iosPath);
     if (!config.modResults.hasFile(thisFilePath)) {
-      console.log(`Adding ${thisFilePath} to Xcode project`);
       IOSConfig.XcodeUtils.addResourceFileToGroup({
         filepath: thisFilePath,
-        groupName: config.modRequest.projectName,
+        groupName: config.modRequest.projectName ?? "",
         project: config.modResults,
         isBuildFile: true,
       });
@@ -104,7 +122,15 @@ const withIosIcons = (config, iosPath) => {
  * @param {string} [props.android] - Directory path for Android drawable resources
  * @param {string} [props.ios] - Path to iOS asset catalog
  */
-const withIcons = (config, { android, ios } = {}) => {
+const withIcons: ConfigPlugin<IconsConfigProps> = (
+  config,
+  props = {
+    android: "./assets/generated-icons/android",
+    ios: "./assets/generated-icons/ios",
+  }
+) => {
+  const { android, ios } = props;
+
   // Apply modifications to the config here
   config = withPlugins(config, [
     [withAndroidIcons, android],
@@ -113,4 +139,4 @@ const withIcons = (config, { android, ios } = {}) => {
   return config;
 };
 
-module.exports = createRunOncePlugin(withIcons, pkg.name, pkg.version);
+export default createRunOncePlugin(withIcons, pkg.name, pkg.version);
