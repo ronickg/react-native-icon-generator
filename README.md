@@ -38,7 +38,19 @@ With custom paths (optional):
 }
 ```
 
-## Example use case with native menu
+## Usage Guide
+
+1. Place your SVG icons in the `assets/icons` folder
+2. Run the converter tool:
+   ```bash
+   npx generate-icons
+   ```
+3. For Expo projects:
+   - Run `npx expo prebuild` to copy the generated icons to the native folders
+   - The next time you build your app, the icons will be included
+   - For non-Expo projects, you'll need to manually copy the generated files to their respective native folders.
+
+## Example use case using Lucide Icons inside native menus
 
 ### iOS Icons
 
