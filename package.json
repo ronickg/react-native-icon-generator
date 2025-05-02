@@ -1,7 +1,7 @@
 {
   "name": "react-native-icon-converter",
   "description": "A command-line tool to convert SVG icons into formats compatible with both Android and iOS from a single source.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "main": "./lib/commonjs/index.js",
   "module": "./lib/module/index.js",
   "source": "src/index",
