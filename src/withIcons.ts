@@ -126,7 +126,7 @@ const withIcons: ConfigPlugin<IconsConfigProps> = (
   config,
   props = {
     android: "./assets/generated-icons/android",
-    ios: "./assets/generated-icons/ios",
+    ios: "./assets/generated-icons/ios/Icons.xcassets",
   }
 ) => {
   const { android, ios } = props;
